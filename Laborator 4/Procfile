@@ -1,0 +1,2 @@
+client: python client.py
+server-gui: python server-gui.py
