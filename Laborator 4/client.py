@@ -145,7 +145,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.socket_stream = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.data = ""
+        self.data = "0"
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -218,9 +218,11 @@ class Ui_MainWindow(object):
     ############################### EXERCISE 1 ###############################
     def recv_handler(self, stop_event):
         while True:
-            # b"0102550"
-            data = self.socket_stream.recv(1024)
-            if 
+            self.data = self.socket_stream.recv(1024)
+            # self.data = self.data.decode()
+            self.data = str(self.data)
+            if self.data is not None:
+                print(self.data)
 
 
     def recv_messages(self):
@@ -244,24 +246,51 @@ class Ui_MainWindow(object):
     # READ DTC's
     # dtc_string nr butonului/dtc ului
     def get_dtc_state(self, dtc_string):
-        if self.diagMode.isEnabled() == True:
-            pass
+        if self.diagMode.isEnabled() == False:
+            msg = "b'62" + dtc_string + "02550'" # green = inactive
+
+            if dtc_string == '01':
+                self.socket_stream.sendall(b"2201")
+
+                if str(self.data) == msg:
+                    self.set_dtc1_state("Inactive")
+                else:
+                    self.set_dtc1_state("Active")
+            elif dtc_string == '02':
+                self.socket_stream.sendall(b"2202")
+                if self.data == msg:
+                    self.set_dtc2_state("Inactive")
+                else:
+                    self.set_dtc2_state("Active")
+            elif dtc_string == '03':
+                self.socket_stream.sendall(b"2203")
+                if self.data == msg:
+                    self.set_dtc3_state("Inactive")
+                else:
+                    self.set_dtc3_state("Active")
+            elif dtc_string == '04':
+                self.socket_stream.sendall(b"2204")
+                if self.data == msg:
+                    self.set_dtc4_state("Inactive")
+                else:
+                    self.set_dtc4_state("Active")
+
 
     # SET DTC1 State
     def set_dtc1_state(self, data_recv):
-        pass
+        self.dtc1_state.setText(data_recv)
 
     # SET DTC2 State
     def set_dtc2_state(self, data_recv):
-        pass
+        self.dtc2_state.setText(data_recv)
 
     # SET DTC3 State
     def set_dtc3_state(self, data_recv):
-        pass
+        self.dtc3_state.setText(data_recv)
 
     # SET DTC4 State
     def set_dtc4_state(self, data_recv):
-        pass
+        self.dtc4_state.setText(data_recv)
 
     ############################### EXERCISE 4 ###############################
 

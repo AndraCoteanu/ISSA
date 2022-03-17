@@ -147,13 +147,24 @@ class Ui_MainWindow(object):
         while True:
             data = self.conn.recv(1024)
             if data == b'3E01':
-                print("mata" + data.decode())
+                print("aici 1 " + data.decode())
                 self.diag_mode = True
             elif data == b'3E00':
-                print("tactu" + data.decode())
+                print("aici 2 " + data.decode())
                 self.diag_mode = False
+
+
+            elif data == b'2201':
+                self.read_dtc1(data)
+            elif data == b'2202':
+                self.read_dtc2(data)
+            elif data == b'03':
+                self.read_dtc3(data)
+            elif data == b'04':
+                self.read_dtc4(data)
+
             else:
-                print("pula" + data.decode())
+                print("deci " + data.decode())
 
     def recv(self):
         self.stop_event = threading.Event()
@@ -163,39 +174,46 @@ class Ui_MainWindow(object):
     ############################### EXERCISE 2 ###############################
     # DTC1
     def set_dtc1(self, led, bright):
-        if self.led1_state.text() == "" or self.led1_state.text() == "Inactive":
-            self.led1_state.setText("Active")
+        if self.led1_state.text() == "":
+            self.led1_state.setText(" Active")
             self.dtc1_state = True
-            #self.led1_state.setStyleSheet("background: green;")
+            self.led1_state.setStyleSheet("background-color: red; border-radius:5px;")
         else:
-            self.led1_state.setText("Inactive")
             self.dtc1_state = False
+            self.led1_state.setStyleSheet("background-color: green; border-radius:5px;")
+            self.led1_state.setText("")
 
     # DTC2
     def set_dtc2(self, led, bright):
-        if self.led2_state.text() == "" or self.led2_state.text() == "Inactive":
-            self.led2_state.setText("Active")
+        if self.led2_state.text() == "":
+            self.led2_state.setText(" Active")
+            self.led2_state.setStyleSheet("background-color: red; border-radius:5px;")
             self.dtc2_state = True
         else:
-            self.led2_state.setText("Inactive")
+            self.led2_state.setText("")
+            self.led2_state.setStyleSheet("background-color: green; border-radius:5px;")
             self.dtc2_state = False
 
     # DTC3
     def set_dtc3(self, led, bright):
-        if self.led3_state.text() == "" or self.led3_state.text() == "Inactive":
-            self.led3_state.setText("Active")
+        if self.led3_state.text() == "":
+            self.led3_state.setText(" Active")
+            self.led3_state.setStyleSheet("background-color: red; border-radius:5px;")
             self.dtc3_state = True
         else:
-            self.led3_state.setText("Inactive")
+            self.led3_state.setText("")
+            self.led3_state.setStyleSheet("background-color: green; border-radius:5px;")
             self.dtc3_state = False
 
     # DTC4
     def set_dtc4(self, led, bright):
-        if self.led4_state.text() == "" or self.led4_state.text() == "Inactive":
-            self.led4_state.setText("Active")
+        if self.led4_state.text() == "":
+            self.led4_state.setText(" Active")
+            self.led4_state.setStyleSheet("background-color: red; border-radius:5px;")
             self.dtc4_state = True
         else:
-            self.led4_state.setText("Inactive")
+            self.led4_state.setText("")
+            self.led4_state.setStyleSheet("background-color: green; border-radius:5px;")
             self.dtc4_state = False
 
     def set_all(self):
@@ -206,28 +224,28 @@ class Ui_MainWindow(object):
 
     ############################### EXERCISE 3 ###############################
     def read_dtc1(self, data):
-        if self.led1_state.text() == "Inactive":
-            self.socket_stream.sendall(b"0102550")
+        if self.led1_state.text() == "":
+            self.conn.sendall(b"620102550")
         else:
-            self.socket_stream.sendall(b"0125500")
+            self.conn.sendall(b"620125500")
 
     def read_dtc2(self, data):
-        if self.led2_state.text() == "Inactive":
-            self.socket_stream.sendall(b"0202550")
+        if self.led2_state.text() == "":
+            self.conn.sendall(b"620202550")
         else:
-            self.socket_stream.sendall(b"0225500")
+            self.conn.sendall(b"620225500")
 
     def read_dtc3(self, data):
-        if self.led3_state.text() == "Inactive":
-            self.socket_stream.sendall(b"0302550")
+        if self.led3_state.text() == "":
+            self.conn.sendall(b"620302550")
         else:
-            self.socket_stream.sendall(b"0325500")
+            self.conn.sendall(b"620325500")
 
     def read_dtc4(self, data):
-        if self.led4_state.text() == "Inactive":
-            self.socket_stream.sendall(b"0402550")
+        if self.led4_state.text() == "":
+            self.conn.sendall(b"620402550")
         else:
-            self.socket_stream.sendall(b"0425500")
+            self.conn.sendall(b"620425500")
 
     ############################### EXERCISE 4 ###############################
     def set_led0(self, data):
